@@ -123,7 +123,7 @@ REFRESH_TOKEN_DAYS  = int(os.getenv("REFRESH_TOKEN_DAYS",  "30"))
 OTP_EXPIRE_SECONDS  = 300
 OTP_MAX_ATTEMPTS    = 5
 OTP_RATE_LIMIT_SEC  = 60
-DB_PATH = os.path.join("/app/data", os.getenv("DB_PATH", "contractclarity.db"))
+DB_PATH = os.getenv("DB_PATH", "contractclarity.db")
 
 # ==================== 分析安全与缓存配置 ====================
 ANALYSIS_RATE_LIMIT_PER_HOUR = int(os.getenv("ANALYSIS_RATE_LIMIT_PER_HOUR", "20"))
