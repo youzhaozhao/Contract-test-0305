@@ -59,7 +59,7 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify, g, Response, stream_with_context, send_from_directory
 from flask_cors import CORS
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
 
 load_dotenv()
@@ -375,10 +375,9 @@ def require_lawyer_auth(f):
     return decorated
 
 print("正在初始化嵌入模型...")
-embeddings = HuggingFaceEmbeddings(
-    model_name="BAAI/bge-large-zh-v1.5",
-    model_kwargs={'device': 'cpu'},
-    encode_kwargs={'normalize_embeddings': True}
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-small", 
+    openai_api_key=os.getenv("OPENAI_API_KEY") 
 )
 
 @app.route('/auth/profile', methods=['PUT'])
