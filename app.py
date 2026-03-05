@@ -374,7 +374,6 @@ def require_lawyer_auth(f):
         return f(*args, **kwargs)
     return decorated
 
-print("正在初始化嵌入模型...")
 embeddings = OpenAIEmbeddings(
     model="text-embedding-3-small", 
     openai_api_key=os.getenv("OPENAI_API_KEY") 
@@ -2967,13 +2966,7 @@ def auth_batch_delete_contracts():
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({
-        'status': 'ok',
-        'timestamp': datetime.now(timezone.utc).isoformat(),
-        'db': 'ok',
-        'analysis_version': ANALYSIS_VERSION,
-        'multi_model_enabled': ENABLE_MULTI_MODEL
-    }), 200
+    return jsonify({"status": "ok", "message": "Service is live"}), 200
 
 
 @app.route('/cache/clear', methods=['POST'])
