@@ -784,36 +784,6 @@ def _get_available_models() -> list[dict]:
 
     print(f"\n[多模型诊断] 正在组建专家审查团...")
 
-    # 2. 阿里云 (通义千问 Qwen-Max)
-    if DASHSCOPE_API_KEY:
-        print(f"[多模型诊断] 加入：阿里云 Qwen-Max")
-        models.append({
-            "name": "qwen-max",
-            "weight": 0.95,
-            "llm": ChatOpenAI(
-                model='qwen-max',
-                openai_api_key=DASHSCOPE_API_KEY,
-                openai_api_base="https://dashscope.aliyuncs.com/compatible-mode/v1",
-                max_tokens=3000,
-                temperature=0.2,
-            )
-        })
-
-    # 4. 硅基流动 (调用 Qwen 2.5 72B - 极高性价比)
-    if SILICONFLOW_API_KEY:
-        print(f"[多模型诊断] 加入：硅基流动 Qwen2.5-72B")
-        models.append({
-            "name": "siliconflow-qwen2.5",
-            "weight": 0.85,
-            "llm": ChatOpenAI(
-                model='Qwen/Qwen2.5-72B-Instruct',
-                openai_api_key=SILICONFLOW_API_KEY,
-                openai_api_base="https://api.siliconflow.cn/v1",
-                max_tokens=3000,
-                temperature=0.2,
-            )
-        })
-
     # 5. Moonshot (Kimi)
     if MOONSHOT_API_KEY:
         print(f"[多模型诊断] 加入：月之暗面 Kimi")
@@ -1469,7 +1439,7 @@ def _run_debate_stage(
     debate_results: dict[int, dict] = {}
     failed_indices: list[int] = []
 
-    with ThreadPoolExecutor(max_workers=min(len(debate_indices), 3)) as ex:
+    with ThreadPoolExecutor(max_workers=min(len(debate_indices), 1)) as ex:
         futures = {
             ex.submit(
                 _debate_single_issue,
