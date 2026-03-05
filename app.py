@@ -61,6 +61,7 @@ from flask_cors import CORS
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
+from langchain_openai import OpenAIEmbeddings
 
 load_dotenv()
 
@@ -375,8 +376,9 @@ def require_lawyer_auth(f):
     return decorated
 
 embeddings = OpenAIEmbeddings(
-    model="text-embedding-3-small", 
-    openai_api_key=os.getenv("OPENAI_API_KEY") 
+    model="BAAI/bge-m3", 
+    openai_api_key=os.getenv("SILICONFLOW_API_KEY"), 
+    openai_api_base="https://api.siliconflow.cn/v1"
 )
 
 @app.route('/auth/profile', methods=['PUT'])
@@ -797,20 +799,6 @@ def _get_available_models() -> list[dict]:
             )
         })
 
-# 3. Google AI Studio (Gemini 1.5 Pro)
-    if GOOGLE_API_KEY:
-        print(f"[多模型诊断] 加入：Google Gemini 1.5 Flash")
-        models.append({
-            "name": "gemini-1.5-flash",
-            "weight": 0.9,
-            "llm": ChatGoogleGenerativeAI(
-                model='gemini-1.5-flash',
-                google_api_key=GOOGLE_API_KEY,
-                max_output_tokens=3000,
-                temperature=0.2,
-            )
-        })
-
     # 4. 硅基流动 (调用 Qwen 2.5 72B - 极高性价比)
     if SILICONFLOW_API_KEY:
         print(f"[多模型诊断] 加入：硅基流动 Qwen2.5-72B")
@@ -1044,7 +1032,7 @@ def _multi_model_risk_review(prompt: str) -> tuple[dict, list[str]]:
 
     if ENABLE_MULTI_MODEL and len(model_configs) > 1:
         # 并行执行
-        with ThreadPoolExecutor(max_workers=len(model_configs)) as ex:
+        with ThreadPoolExecutor(max_workers=3) as ex:
             futures = {
                 ex.submit(_run_single_model_review, cfg, prompt): i
                 for i, cfg in enumerate(model_configs)
