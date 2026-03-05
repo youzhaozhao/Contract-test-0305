@@ -15,7 +15,7 @@ app.py  ──  ContractClarity 后端服务（专家增强版 v4.0）
    - 环境变量：ENABLE_DEBATE_MODE=true（默认 false）
                DEBATE_MAX_ROUNDS=1（辩论轮数，1-2）
                DEBATE_TOP_N_ISSUES=3（最多辩论前 N 个高危议题）
-               DEBATE_TIMEOUT=120（单议题辩论超时秒数）
+               DEBATE_TIMEOUT=150（单议题辩论超时秒数）
 
 ★ 增强 B: 动态法律知识库（结合 ingest.py v2.0）
    - 向量检索时区分文档类型：法律法规 / 司法解释 / 典型案例 / 部门规章
@@ -94,7 +94,7 @@ GOOGLE_API_KEY       = os.getenv("GOOGLE_API_KEY", "")
 SILICONFLOW_API_KEY  = os.getenv("SILICONFLOW_API_KEY", "")
 ZHIPU_API_KEY        = os.getenv("ZHIPU_API_KEY", "") 
 ENABLE_MULTI_MODEL  = os.getenv("ENABLE_MULTI_MODEL", "false").lower() == "true"
-MULTI_MODEL_TIMEOUT = int(os.getenv("MULTI_MODEL_TIMEOUT", "120"))  # 每个模型最大等待秒数
+MULTI_MODEL_TIMEOUT = int(os.getenv("MULTI_MODEL_TIMEOUT", "150"))  # 每个模型最大等待秒数
 # 置信度阈值：多模型共识度低于此值时在报告中标记"存在分歧"
 CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", "0.5"))
 
@@ -104,7 +104,7 @@ ENABLE_DEBATE_MODE    = os.getenv("ENABLE_DEBATE_MODE",    "false").lower() == "
 # 辩论轮数：1=单轮立场+裁定，2=加一轮反驳
 DEBATE_MAX_ROUNDS     = max(1, min(2, int(os.getenv("DEBATE_MAX_ROUNDS", "1"))))
 # 最多对前 N 个高危议题展开辩论（避免费用失控）
-DEBATE_TOP_N_ISSUES   = max(1, min(5, int(os.getenv("DEBATE_TOP_N_ISSUES", "3"))))
+DEBATE_TOP_N_ISSUES   = max(1, min(5, int(os.getenv("DEBATE_TOP_N_ISSUES", "2"))))
 # 单个议题辩论超时（秒）
 DEBATE_TIMEOUT        = int(os.getenv("DEBATE_TIMEOUT", "120"))
 
@@ -783,6 +783,21 @@ def _get_available_models() -> list[dict]:
         return models
 
     print(f"\n[多模型诊断] 正在组建专家审查团...")
+
+    # 2. 阿里云 (通义千问 Qwen-Max)
+    if DASHSCOPE_API_KEY:
+        print(f"[多模型诊断] 加入：阿里云 Qwen-Max")
+        models.append({
+            "name": "qwen-max",
+            "weight": 0.95,
+            "llm": ChatOpenAI(
+                model='qwen-max',
+                openai_api_key=DASHSCOPE_API_KEY,
+                openai_api_base="https://dashscope.aliyuncs.com/compatible-mode/v1",
+                max_tokens=3000,
+                temperature=0.2,
+            )
+        })
 
     # 5. Moonshot (Kimi)
     if MOONSHOT_API_KEY:
