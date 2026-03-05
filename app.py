@@ -2967,38 +2967,13 @@ def auth_batch_delete_contracts():
 
 @app.route('/health', methods=['GET'])
 def health():
-    from ingest import LAW_CATEGORIES as INGEST_CATS
-    h = {
-        'status':             'ok',
-        'timestamp':          datetime.now(timezone.utc).isoformat(),
-        'db':                 'ok',
-        'embedding_model':    'loaded',
-        'vector_dbs':         {},
-        'active_tasks':       sum(1 for t in tasks.values() if t.get('status') == 'processing'),
-        'total_tasks':        len(tasks),
-        'analysis_version':   ANALYSIS_VERSION,
-        'multi_model_enabled': ENABLE_MULTI_MODEL,
-        'available_models':   [m['name'] for m in _get_available_models()],
-        'kb_manifest':        _load_kb_manifest(),
-    }
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        conn.execute("SELECT COUNT(*) FROM users").fetchone()
-        conn.close()
-    except Exception as e:
-        h['db'] = f'error: {str(e)}'
-        h['status'] = 'degraded'
-
-    check_cats = INGEST_CATS + ['通用', '典型案例']
-    for cat in check_cats:
-        path = os.path.join('./chroma_db', cat)
-        h['vector_dbs'][cat] = 'ok' if os.path.exists(path) else 'missing'
-
-    if any(v == 'missing' for v in h['vector_dbs'].values()):
-        h['status'] = 'degraded'
-
-    status_code = 200 if h['status'] == 'ok' else 207
-    return jsonify(h), status_code
+    return jsonify({
+        'status': 'ok',
+        'timestamp': datetime.now(timezone.utc).isoformat(),
+        'db': 'ok',
+        'analysis_version': ANALYSIS_VERSION,
+        'multi_model_enabled': ENABLE_MULTI_MODEL
+    }), 200
 
 
 @app.route('/cache/clear', methods=['POST'])
