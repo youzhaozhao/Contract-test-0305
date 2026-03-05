@@ -8,4 +8,7 @@ sentence-transformers
 mammoth
 langchain_google_genai
 pyjwt
-
+python-dotenv
+chromadb
+bcrypt
+gunicorn
