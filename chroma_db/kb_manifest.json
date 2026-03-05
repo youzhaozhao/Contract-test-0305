@@ -1,0 +1,87 @@
+{
+  "schema_version": "2.0",
+  "last_updated": "2026-03-05T17:47:02.918276",
+  "total_laws": 317,
+  "total_chunks": 7799,
+  "category_stats": {
+    "劳动用工类": {
+      "doc_count": 22,
+      "chunk_count": 954,
+      "doc_type_counts": {
+        "法律法规": 16,
+        "司法解释": 6
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "房产物业类": {
+      "doc_count": 16,
+      "chunk_count": 694,
+      "doc_type_counts": {
+        "法律法规": 10,
+        "司法解释": 6
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "消费服务类": {
+      "doc_count": 19,
+      "chunk_count": 794,
+      "doc_type_counts": {
+        "法律法规": 13,
+        "司法解释": 6
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "金融借贷类": {
+      "doc_count": 17,
+      "chunk_count": 810,
+      "doc_type_counts": {
+        "法律法规": 11,
+        "司法解释": 6
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "网络数字类": {
+      "doc_count": 18,
+      "chunk_count": 730,
+      "doc_type_counts": {
+        "法律法规": 13,
+        "司法解释": 5
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "婚姻家庭类": {
+      "doc_count": 15,
+      "chunk_count": 690,
+      "doc_type_counts": {
+        "法律法规": 8,
+        "司法解释": 7
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "经营合作类": {
+      "doc_count": 23,
+      "chunk_count": 832,
+      "doc_type_counts": {
+        "法律法规": 11,
+        "司法解释": 12
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "其他类": {
+      "doc_count": 15,
+      "chunk_count": 816,
+      "doc_type_counts": {
+        "法律法规": 10,
+        "司法解释": 5
+      },
+      "last_built": "2026-03-05T17:47:02.918276"
+    },
+    "典型案例": {
+      "doc_count": 172,
+      "chunk_count": 1479,
+      "doc_type_counts": {},
+      "last_built": "2026-03-05T17:47:02.918276"
+    }
+  },
+  "includes_cases": true
+}
