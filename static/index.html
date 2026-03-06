@@ -4865,7 +4865,7 @@
                         {/* 步骤 1: 选择合同类型                                */}
                         {/* ══════════════════════════════════════════════════ */}
                         {step === 'categorySelect' && (
-                            <div className="max-w-7xl mx-auto animate-up px-4"> {/* 加宽容器 + 增加左右内边距 */}
+                            <div className="max-w-7xl mx-auto animate-up px-4">
                                 <div className="text-center mb-10">
                                     <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">{t('step1_heading')}</h2>
                                     <p className="text-slate-500 mb-5 text-sm">{t('step1_desc')}</p>
@@ -4877,18 +4877,17 @@
                                         {isAllExpanded ? t('collapse_all') : t('expand_all')}
                                     </button>
                                 </div>
-                                {/* 核心修改：网格布局改为 4列（大屏）/ 2列（平板）/ 1列（手机） */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 items-start mt-12">
                                     {CATEGORIES.map((cat, idx) => {
                                         const catColors = {
-                                            '劳动用工类': { icon: 'text-blue-400', bg: 'bg-blue-600/20', bgSel: 'bg-blue-600/40', border: 'border-blue-500', check: 'text-blue-400' },
-                                            '房产物业类': { icon: 'text-emerald-400', bg: 'bg-emerald-600/20', bgSel: 'bg-emerald-600/40', border: 'border-emerald-500', check: 'text-emerald-400' },
-                                            '消费服务类': { icon: 'text-orange-400', bg: 'bg-orange-600/20', bgSel: 'bg-orange-600/40', border: 'border-orange-500', check: 'text-orange-400' },
-                                            '金融借贷类': { icon: 'text-amber-400', bg: 'bg-amber-600/20', bgSel: 'bg-amber-600/40', border: 'border-amber-500', check: 'text-amber-400' },
-                                            '网络数字类': { icon: 'text-violet-400', bg: 'bg-violet-600/20', bgSel: 'bg-violet-600/40', border: 'border-violet-500', check: 'text-violet-400' },
-                                            '婚姻家庭类': { icon: 'text-pink-400', bg: 'bg-pink-600/20', bgSel: 'bg-pink-600/40', border: 'border-pink-500', check: 'text-pink-400' },
-                                            '经营合作类': { icon: 'text-teal-400', bg: 'bg-teal-600/20', bgSel: 'bg-teal-600/40', border: 'border-teal-500', check: 'text-teal-400' },
-                                            '其他类':     { icon: 'text-slate-400', bg: 'bg-slate-600/20', bgSel: 'bg-slate-600/40', border: 'border-slate-500', check: 'text-slate-400' },
+                                            '劳动用工类': { icon: 'text-blue-400', bg: 'bg-blue-600/20', border: 'border-blue-500' },
+                                            '房产物业类': { icon: 'text-emerald-400', bg: 'bg-emerald-600/20', border: 'border-emerald-500' },
+                                            '消费服务类': { icon: 'text-orange-400', bg: 'bg-orange-600/20', border: 'border-orange-500' },
+                                            '金融借贷类': { icon: 'text-amber-400', bg: 'bg-amber-600/20', border: 'border-amber-500' },
+                                            '网络数字类': { icon: 'text-violet-400', bg: 'bg-violet-600/20', border: 'border-violet-500' },
+                                            '婚姻家庭类': { icon: 'text-pink-400', bg: 'bg-pink-600/20', border: 'border-pink-500' },
+                                            '经营合作类': { icon: 'text-teal-400', bg: 'bg-teal-600/20', border: 'border-teal-500' },
+                                            '其他类':     { icon: 'text-slate-400', bg: 'bg-slate-600/20', border: 'border-slate-500' },
                                         };
                                         const cc = catColors[cat.id] || catColors['其他类'];
                                         const isSelected = selectedCategory === cat.id;
@@ -4897,15 +4896,13 @@
                                                 className={`glass-card p-6 transition-all hover-lift border-2 card-reveal relative ${isSelected ? `${cc.border} bg-blue-500/5` : 'border-white/5 hover:border-white/15'}`}
                                                 style={{animationDelay: `${idx * 0.06}s`}}>
                                                 
-                                                {/* 顶部标题栏 */}
                                                 <div className="flex justify-between items-center relative z-10">
                                                     <div className="flex items-center gap-4 flex-1 cursor-pointer"
                                                         onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
                                                         
-                                                        {/* 图标/图片 容器 */}
+                                                        {/* 图标/图片容器 - 增加 overflow-hidden 确保图片圆角 */}
                                                         <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${cc.bg} ${cc.icon}`}>
                                                             {isPetMode ? (
-                                                                // 萌宠模式：图片充满容器并居中，正着放
                                                                 <img 
                                                                     src={cat.img} 
                                                                     alt="" 
@@ -4913,31 +4910,24 @@
                                                                     onError={(e) => { e.target.style.display='none'; }}
                                                                 />
                                                             ) : (
-                                                                // 普通模式：显示标准 Lucide 图标
                                                                 <i data-lucide={cat.icon} className="w-6 h-6"></i>
                                                             )}
                                                         </div>
 
-                                                        {/* 文字部分 */}
                                                         <div>
                                                             <span className="text-xl font-bold text-white">{getCatName(cat.id)}</span>
                                                             {isSelected && <div className="text-[10px] text-blue-400 font-black mt-0.5">✓ 已选择</div>}
                                                         </div>
                                                     </div>
 
-                                                    {/* 详情展开按钮 */}
                                                     <button
-                                                        onClick={e => { 
-                                                            e.stopPropagation(); 
-                                                            setExpandedCat(prev => prev.includes(cat.id) ? prev.filter(id => id !== cat.id) : [...prev, cat.id]); 
-                                                        }}
+                                                        onClick={e => { e.stopPropagation(); setExpandedCat(prev => prev.includes(cat.id) ? prev.filter(id => id !== cat.id) : [...prev, cat.id]); }}
                                                         className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-500"
                                                     >
                                                         <i data-lucide={expandedCat.includes(cat.id) ? 'chevron-up' : 'chevron-down'} className="w-5 h-5"></i>
                                                     </button>
                                                 </div>
                                                 
-                                                {/* 展开的详情内容 */}
                                                 {expandedCat.includes(cat.id) && (
                                                     <div className="mt-4 pt-4 border-t border-white/5 text-sm text-slate-400 leading-relaxed negotiation-markdown relative z-10"
                                                         dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(cat.detail) }}>
@@ -4946,6 +4936,9 @@
                                             </div>
                                         );
                                     })}
+                                </div>
+                            </div>
+                        )}
 
                         {/* ══════════════════════════════════════════════════ */}
                         {/* 步骤 2: 上传 / 粘贴                                */}
