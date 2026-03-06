@@ -4896,12 +4896,16 @@
                                             <div key={cat.id} 
                                                 className={`glass-card p-6 transition-all hover-lift border-2 card-reveal relative ${isSelected ? `${cc.border} bg-blue-500/5` : 'border-white/5 hover:border-white/15'}`}
                                                 style={{animationDelay: `${idx * 0.06}s`}}>
+                                                
+                                                {/* 顶部标题栏 */}
                                                 <div className="flex justify-between items-center relative z-10">
                                                     <div className="flex items-center gap-4 flex-1 cursor-pointer"
                                                         onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
-                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${isSelected ? 'scale-110' : ''} ${cc.bg} ${cc.icon}`}>
+                                                        
+                                                        {/* 图标/图片 容器 */}
+                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${cc.bg} ${cc.icon}`}>
                                                             {isPetMode ? (
-                                                                // 萌宠模式：图片充满容器并居中
+                                                                // 萌宠模式：图片充满容器并居中，正着放
                                                                 <img 
                                                                     src={cat.img} 
                                                                     alt="" 
@@ -4913,20 +4917,27 @@
                                                                 <i data-lucide={cat.icon} className="w-6 h-6"></i>
                                                             )}
                                                         </div>
-                                                        </div>
+
+                                                        {/* 文字部分 */}
                                                         <div>
                                                             <span className="text-xl font-bold text-white">{getCatName(cat.id)}</span>
                                                             {isSelected && <div className="text-[10px] text-blue-400 font-black mt-0.5">✓ 已选择</div>}
                                                         </div>
                                                     </div>
+
+                                                    {/* 详情展开按钮 */}
                                                     <button
-                                                        onClick={e => { e.stopPropagation(); setExpandedCat(prev => prev.includes(cat.id) ? prev.filter(id => id !== cat.id) : [...prev, cat.id]); setTimeout(() => lucide.createIcons(), 100); }}
+                                                        onClick={e => { 
+                                                            e.stopPropagation(); 
+                                                            setExpandedCat(prev => prev.includes(cat.id) ? prev.filter(id => id !== cat.id) : [...prev, cat.id]); 
+                                                        }}
                                                         className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-500"
                                                     >
                                                         <i data-lucide={expandedCat.includes(cat.id) ? 'chevron-up' : 'chevron-down'} className="w-5 h-5"></i>
                                                     </button>
                                                 </div>
                                                 
+                                                {/* 展开的详情内容 */}
                                                 {expandedCat.includes(cat.id) && (
                                                     <div className="mt-4 pt-4 border-t border-white/5 text-sm text-slate-400 leading-relaxed negotiation-markdown relative z-10"
                                                         dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(cat.detail) }}>
@@ -4935,10 +4946,6 @@
                                             </div>
                                         );
                                     })}
-                                </div>
-                            </div>
-                        )}
-
 
                         {/* ══════════════════════════════════════════════════ */}
                         {/* 步骤 2: 上传 / 粘贴                                */}
