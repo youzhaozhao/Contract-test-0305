@@ -4864,7 +4864,7 @@
                                         const isSelected = selectedCategory === cat.id;
                                         const imgPositionClass = idx < 4 
                                             ? "-top-8 -left-4 -rotate-12"  // 左上方，稍微旋转增加设计感
-                                            : "-top-8 -right-4 rotate-12"; // 右上方，反向旋转
+                                            : "-top-8 -left-4 rotate-12"; // 右上方，反向旋转
                                         return (
                                             <div key={cat.id} 
                                                 className={`glass-card p-6 transition-all hover-lift border-2 card-reveal relative ${isSelected ? `${cc.border} bg-blue-500/5` : 'border-white/5 hover:border-white/15'}`}
@@ -4875,7 +4875,7 @@
                                                     <img 
                                                         src={cat.img} 
                                                         alt="" 
-                                                        className="w-full h-full object-cover rounded-xl shadow-2xl border-2 border-white/20"
+                                                        className="w-full h-full object-cover"
                                                         onError={(e) => e.target.style.display='none'} // 如果图片加载失败则隐藏
                                                     />
                                                 </div>
