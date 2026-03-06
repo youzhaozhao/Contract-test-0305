@@ -3912,6 +3912,7 @@
             const [copyTipType, setCopyTipType]     = useState('');
             const [selectedLanguage, setSelectedLanguage] = useState('zh-CN');
             const [ocrStatus, setOcrStatus]         = useState('');
+            const [isPetMode, setIsPetMode] = useState(false);
 
             // ── 新增状态 ──
             const [apiHealth, setApiHealth]         = useState('checking');  // 'ok' | 'error' | 'checking'
@@ -4771,6 +4772,19 @@
                                 </select>
                                 {/* ── 主题切换按钮 ── */}
                                 <button
+                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${isPetMode ? 'bg-pink-500/20 border-pink-500/50 text-pink-400' : 'bg-slate-500/10 border-slate-500/20 text-slate-500'}`}
+                                    onClick={() => {
+                                        setIsPetMode(!isPetMode);
+                                        setTimeout(() => lucide.createIcons(), 100);
+                                    }}
+                                    title="切换萌宠模式"
+                                >
+                                    <i data-lucide={isPetMode ? "cat" : "dog"} className="w-4 h-4"></i>
+                                    <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">
+                                        {isPetMode ? '萌宠模式: ON' : '萌宠模式: OFF'}
+                                    </span>
+                                </button>
+                                <button
                                     className="theme-toggle-btn"
                                     onClick={() => setIsDarkMode(d => !d)}
                                     title={isDarkMode ? '切换至浅色模式' : '切换至深色模式'}
@@ -4883,8 +4897,19 @@
                                                 <div className="flex justify-between items-center relative z-10">
                                                     <div className="flex items-center gap-4 flex-1 cursor-pointer"
                                                         onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
-                                                        <div className={`p-3 rounded-2xl transition-all ${cc.bg} ${cc.icon}`}>
-                                                            <i data-lucide={cat.icon} className="w-6 h-6"></i>
+                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 ${cc.bg} ${cc.icon}`}>
+                                                            {isPetMode ? (
+                                                                // 萌宠模式开启：显示图片，正着放，不带阴影和背景（继承父级透明背景）
+                                                                <img 
+                                                                    src={cat.img} 
+                                                                    alt="" 
+                                                                    className="w-10 h-10 object-contain"
+                                                                    onError={(e) => { e.target.style.display='none'; }}
+                                                                />
+                                                            ) : (
+                                                                // 萌宠模式关闭：显示原始图标
+                                                                <i data-lucide={cat.icon} className="w-6 h-6"></i>
+                                                            )}
                                                         </div>
                                                         <div>
                                                             <span className="text-xl font-bold text-white">{getCatName(cat.id)}</span>
