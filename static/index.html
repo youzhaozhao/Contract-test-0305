@@ -1741,6 +1741,28 @@
         .bg-slate-900   { background-color: #f0f4f8 !important; }
         .bg-slate-800   { background-color: #f1f5f9 !important; }
         .bg-slate-950   { background-color: #eef2f7 !important; }
+
+
+        /* ════════════════════════════════════════════════════════
+           🐾 萌宠模式专属背景
+           ════════════════════════════════════════════════════════ */
+        body.pet-mode {
+            /* 替换为你实际存放背景图的路径 */
+            background-image: url('/static/img/background-1.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+        }
+        /* 开启萌宠模式时，隐藏原有的噪点和网格叠加层 */
+        body.pet-mode::before,
+        body.pet-mode::after {
+            display: none !important;
+        }
+        /* 开启萌宠模式时，隐藏原有的动态发光球 */
+        body.pet-mode .bg-orbs {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -4029,6 +4051,15 @@
                 }
                 try { localStorage.setItem('cc-theme', isDarkMode ? 'dark' : 'light'); } catch {}
             }, [isDarkMode]);
+
+            // ── 萌宠模式背景同步 ──
+            useEffect(() => {
+                if (isPetMode) {
+                    document.body.classList.add('pet-mode');
+                } else {
+                    document.body.classList.remove('pet-mode');
+                }
+            }, [isPetMode]);
 
             // ── 启动时验证 JWT，从后端加载用户（ref 防止重复执行）──
             useEffect(() => {
