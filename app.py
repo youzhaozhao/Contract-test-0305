@@ -2106,6 +2106,23 @@ LANGUAGE_MAP = {
     'ru':    'Russian (Русский)',
 }
 
+@app.route('/debug-files')
+def debug_files():
+    import os
+    res = {
+        "current_work_dir": os.getcwd(),
+        "files_in_root": os.listdir('.'),
+    }
+    # 检查 static 文件夹
+    if os.path.exists('static'):
+        res["static_content"] = os.listdir('static')
+        if os.path.exists('static/img'):
+            res["img_content"] = os.listdir('static/img')
+        else:
+            res["img_content"] = "FOLDER 'img' NOT FOUND"
+    else:
+        res["static_content"] = "FOLDER 'static' NOT FOUND"
+    return jsonify(res)
 
 # 兼容旧版 get_law_docs 引用
 def get_law_docs(contract_text: str, category: str, k: int = 6) -> tuple[list, int]:
