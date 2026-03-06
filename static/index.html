@@ -4772,10 +4772,17 @@
                                 </select>
                                 {/* ── 主题切换按钮 ── */}
                                 <button
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${isPetMode ? 'bg-pink-500/20 border-pink-500/50 text-pink-400' : 'bg-slate-500/10 border-slate-500/20 text-slate-500'}`}
-                                    onClick={() => {
-                                        setIsPetMode(!isPetMode);
-                                        setTimeout(() => lucide.createIcons(), 100);
+                                    type="button" // 显式声明类型
+                                    className={`relative z-30 flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all cursor-pointer pointer-events-auto ${isPetMode ? 'bg-pink-500/20 border-pink-500/50 text-pink-400' : 'bg-slate-500/10 border-slate-500/20 text-slate-500'}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const newMode = !isPetMode;
+                                        setIsPetMode(newMode);
+                                        // 只有关闭萌宠模式回到基础图标时，才需要刷新 Lucide
+                                        if (!newMode) {
+                                            setTimeout(() => lucide.createIcons(), 50);
+                                        }
                                     }}
                                     title="切换萌宠模式"
                                 >
@@ -4883,33 +4890,23 @@
                                             <div key={cat.id} 
                                                 className={`glass-card p-6 transition-all hover-lift border-2 card-reveal relative ${isSelected ? `${cc.border} bg-blue-500/5` : 'border-white/5 hover:border-white/15'}`}
                                                 style={{animationDelay: `${idx * 0.06}s`}}>
-                                                
-                                                {/* 插入的照片 */}
-                                                <div className={`absolute ${imgPositionClass} w-20 h-20 z-20 pointer-events-none`}>
-                                                    <img 
-                                                        src={cat.img} 
-                                                        alt="" 
-                                                        className="w-full h-full object-cover"
-                                                        onError={(e) => e.target.style.display='none'} // 如果图片加载失败则隐藏
-                                                    />
-                                                </div>
-
                                                 <div className="flex justify-between items-center relative z-10">
                                                     <div className="flex items-center gap-4 flex-1 cursor-pointer"
                                                         onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
-                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 ${cc.bg} ${cc.icon}`}>
+                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${cc.bg} ${cc.icon}`}>
                                                             {isPetMode ? (
-                                                                // 萌宠模式开启：显示图片，正着放，不带阴影和背景（继承父级透明背景）
+                                                                // 萌宠模式开启：显示图片，正着放在图标位置，填满容器但保持比例
                                                                 <img 
                                                                     src={cat.img} 
                                                                     alt="" 
-                                                                    className="w-10 h-10 object-contain"
+                                                                    className="w-full h-full object-cover animate-fade" // object-cover 让它填满圆角框
                                                                     onError={(e) => { e.target.style.display='none'; }}
                                                                 />
                                                             ) : (
-                                                                // 萌宠模式关闭：显示原始图标
+                                                                // 萌宠模式关闭：显示原始 Lucide 图标
                                                                 <i data-lucide={cat.icon} className="w-6 h-6"></i>
                                                             )}
+                                                        </div>
                                                         </div>
                                                         <div>
                                                             <span className="text-xl font-bold text-white">{getCatName(cat.id)}</span>
