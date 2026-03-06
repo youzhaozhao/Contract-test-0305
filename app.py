@@ -296,7 +296,7 @@ def init_db():
         conn.close()
     print("数据库初始化完成:", DB_PATH)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static') 
 CORS(app, resources={r"/*": {
     "origins": "*",
     "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -307,6 +307,9 @@ CORS(app, resources={r"/*": {
 def serve_index():
     return send_from_directory('static', 'index.html')
 
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
 
 @app.before_request
 def handle_options_preflight():
