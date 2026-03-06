@@ -1781,12 +1781,7 @@
             transition: all 0.2s;
         }
         .bg-dot:hover { transform: scale(1.2); }
-        .bg-dot.active { 
-                    border-color: white; 
-                    /* 让发光颜色根据圆点颜色变化（也可以保持白色） */
-                    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-                    transform: scale(1.2); /* 选中时稍微大一点 */
-                }
+        .bg-dot.active { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.8); }
     </style>
 </head>
 
@@ -4867,7 +4862,7 @@
                                                     key={idx}
                                                     className={`bg-dot ${petBgIndex === idx ? 'active' : ''}`}
                                                     style={{ 
-                                                        background: idx === 1 ? '#3b82f6' : idx === 2 ? '#ef4444' : '#10b981'
+                                                        background: idx === 1 ? '#B7D9FF' : idx === 2 ? '#FFB7B7' : '#B7FFC1' 
                                                     }}
                                                     onClick={() => setPetBgIndex(idx)}
                                                     title={`背景 ${idx}`}
