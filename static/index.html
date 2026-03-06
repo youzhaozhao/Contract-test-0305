@@ -4041,6 +4041,15 @@
                     if (user) _loadUserPerms(); 
                 });
             }, []);
+    
+            // 监听萌宠模式变化，自动刷新图标
+            useEffect(() => {
+                setTimeout(() => {
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                }, 50);
+            }, [isPetMode]);
 
             const currentLength = contractText.length;
             const isTextValid   = currentLength >= MIN_CHARACTERS && currentLength <= MAX_CHARACTERS;
@@ -4772,21 +4781,21 @@
                                 </select>
                                 {/* ── 主题切换按钮 ── */}
                                 <button
-                                    type="button" // 显式声明类型
-                                    className={`relative z-30 flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all cursor-pointer pointer-events-auto ${isPetMode ? 'bg-pink-500/20 border-pink-500/50 text-pink-400' : 'bg-slate-500/10 border-slate-500/20 text-slate-500'}`}
+                                    type="button"
+                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${isPetMode ? 'bg-pink-500/20 border-pink-500/50 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.2)]' : 'bg-slate-500/10 border-slate-500/20 text-slate-500'}`}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
-                                        const newMode = !isPetMode;
-                                        setIsPetMode(newMode);
-                                        // 只有关闭萌宠模式回到基础图标时，才需要刷新 Lucide
-                                        if (!newMode) {
-                                            setTimeout(() => lucide.createIcons(), 50);
-                                        }
+                                        setIsPetMode(!isPetMode);
                                     }}
                                     title="切换萌宠模式"
                                 >
-                                    <i data-lucide={isPetMode ? "cat" : "dog"} className="w-4 h-4"></i>
+                                    {/* 动态判断显示图标还是图片 */}
+                                    {isPetMode ? (
+                                        <i data-lucide="cat" className="w-4 h-4"></i>
+                                    ) : (
+                                        <i data-lucide="dog" className="w-4 h-4"></i>
+                                    )}
                                     <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">
                                         {isPetMode ? '萌宠模式: ON' : '萌宠模式: OFF'}
                                     </span>
@@ -4883,9 +4892,6 @@
                                         };
                                         const cc = catColors[cat.id] || catColors['其他类'];
                                         const isSelected = selectedCategory === cat.id;
-                                        const imgPositionClass = idx < 4 
-                                            ? "-top-8 -left-4 -rotate-12"  // 左上方，稍微旋转增加设计感
-                                            : "-top-8 -left-4 rotate-12"; // 右上方，反向旋转
                                         return (
                                             <div key={cat.id} 
                                                 className={`glass-card p-6 transition-all hover-lift border-2 card-reveal relative ${isSelected ? `${cc.border} bg-blue-500/5` : 'border-white/5 hover:border-white/15'}`}
@@ -4893,17 +4899,17 @@
                                                 <div className="flex justify-between items-center relative z-10">
                                                     <div className="flex items-center gap-4 flex-1 cursor-pointer"
                                                         onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
-                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${cc.bg} ${cc.icon}`}>
+                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${isSelected ? 'scale-110' : ''} ${cc.bg} ${cc.icon}`}>
                                                             {isPetMode ? (
-                                                                // 萌宠模式开启：显示图片，正着放在图标位置，填满容器但保持比例
+                                                                // 萌宠模式：图片充满容器并居中
                                                                 <img 
                                                                     src={cat.img} 
                                                                     alt="" 
-                                                                    className="w-full h-full object-cover animate-fade" // object-cover 让它填满圆角框
+                                                                    className="w-full h-full object-cover animate-fade"
                                                                     onError={(e) => { e.target.style.display='none'; }}
                                                                 />
                                                             ) : (
-                                                                // 萌宠模式关闭：显示原始 Lucide 图标
+                                                                // 普通模式：显示标准 Lucide 图标
                                                                 <i data-lucide={cat.icon} className="w-6 h-6"></i>
                                                             )}
                                                         </div>
@@ -4944,7 +4950,7 @@
                                         className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
                                         <i data-lucide="arrow-left" className="w-4 h-4"></i> {t('back_btn')}
                                     </button>
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-3 relative z-50">
                                         <span className="text-sm font-bold text-blue-400 uppercase tracking-widest">{t('current_type')}{getCatName(selectedCategory)}</span>
                                         <span className="text-slate-600">|</span>
                                         <span className={`text-xs font-black px-2 py-0.5 rounded-lg ${partyRole === 'partyA' ? 'text-blue-400 bg-blue-500/10' : 'text-purple-400 bg-purple-500/10'}`}>
