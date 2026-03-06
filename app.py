@@ -296,7 +296,11 @@ def init_db():
         conn.close()
     print("数据库初始化完成:", DB_PATH)
 
-app = Flask(__name__, static_folder='static') 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(__name__, 
+            static_folder=os.path.join(basedir, 'static'),
+            static_url_path='/static')
 CORS(app, resources={r"/*": {
     "origins": "*",
     "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -305,11 +309,11 @@ CORS(app, resources={r"/*": {
 
 @app.route('/')
 def serve_index():
-    return send_from_directory('static', 'index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/static/<path:path>')
-def send_static(path):
-    return send_from_directory('static', path)
+def send_static_files(path):
+    return send_from_directory(app.static_folder, path)
 
 @app.before_request
 def handle_options_preflight():
