@@ -4901,7 +4901,10 @@
                                                         onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
                                                         
                                                         {/* 图标/图片容器 - 增加 overflow-hidden 确保图片圆角 */}
-                                                        <div className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${cc.bg} ${cc.icon}`}>
+                                                        {/* key 随 isPetMode 变化，确保 React 整体替换容器而非尝试复用
+                                                            被 lucide.createIcons() 替换为 <svg> 的已脱离 DOM 的 <i> 节点，
+                                                            避免 React 调用 parent.removeChild(detachedNode) 抛出错误导致界面消失 */}
+                                                        <div key={isPetMode ? 'pet-icon' : 'lucide-icon'} className={`w-14 h-14 rounded-2xl transition-all flex items-center justify-center shrink-0 overflow-hidden ${cc.bg} ${cc.icon}`}>
                                                             {isPetMode ? (
                                                                 <img 
                                                                     src={cat.img} 
