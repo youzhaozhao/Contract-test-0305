@@ -2476,14 +2476,14 @@
 
         // ==================== 合同类型 ====================
         const CATEGORIES = [
-            { id: '劳动用工类', icon: 'users',         detail: '**涵盖合同**：劳动合同、劳务合同、实习协议、竞业限制协议、保密协议、离职协议等。\n **审查重点**：试用期约定、薪资结构、工时制度、社保缴纳、违约金条款、竞业限制补偿等。' },
-            { id: '房产物业类', icon: 'home',          detail: '**涵盖合同**：商品房买卖合同、房屋租赁合同、二手房买卖合同、装修合同、物业服务合同、房产中介服务合同等。\n **审查重点**：产权清晰度、交付标准、违约责任、押金退还、装修质量、物业费用等。' },
-            { id: '消费服务类', icon: 'shopping-cart', detail: '**涵盖合同**：教育培训合同、健身/美容/预付卡服务合同、旅游合同、婚庆服务合同、家政服务合同、维修服务合同等。\n **审查重点**：退费条款、格式条款、虚假宣传、预付款安全、服务标准、霸王条款等。' },
-            { id: '金融借贷类', icon: 'banknote',      detail: '**涵盖合同**：借款合同（个人/银行）、网络借贷合同、信用卡协议、担保合同、抵押合同、融资租赁合同等。\n **审查重点**：利率上限、复利计算、担保责任、提前还款违约金、征信条款等。' },
-            { id: '网络数字类', icon: 'globe',         detail: '**涵盖合同**：用户注册协议/隐私政策、软件许可协议、电商交易合同、网络直播/游戏服务协议、云服务合同、数据授权协议等。\n **审查重点**：个人信息收集范围、数据使用授权、免责条款、账号归属、虚拟财产、自动续费等。' },
-            { id: '婚姻家庭类', icon: 'heart',         detail: '**涵盖合同**：婚前/婚内财产协议、离婚协议、收养协议、遗赠扶养协议等。\n **审查重点**：财产归属约定、债务承担、子女抚养、赡养义务、撤销条件等。' },
-            { id: '经营合作类', icon: 'briefcase',     detail: '**涵盖合同**：合伙协议、股东协议/公司章程，加盟/特许经营合同，经销/代理合同，联营合同，对赌协议等。\n **审查重点**：出资责任，盈亏分配，退出机制，竞业禁止，无限连带责任，对赌条款效力等。' },
-            { id: '其他类',     icon: 'more-horizontal',detail: '**涵盖合同**：无法归入上述7类的合同，如赠与合同、借用合同、仓储合同、运输合同、知识产权许可等。' },
+            { id: '劳动用工类', icon: 'users',         img: 'static/img/1.png', detail: '**涵盖合同**：劳动合同、劳务合同、实习协议、竞业限制协议、保密协议、离职协议等。\n **审查重点**：试用期约定、薪资结构、工时制度、社保缴纳、违约金条款、竞业限制补偿等。' },
+            { id: '房产物业类', icon: 'home',          img: 'static/img/2.png', detail: '**涵盖合同**：商品房买卖合同、房屋租赁合同、二手房买卖合同、装修合同、物业服务合同、房产中介服务合同等。\n **审查重点**：产权清晰度、交付标准、违约责任、押金退还、装修质量、物业费用等。' },
+            { id: '消费服务类', icon: 'shopping-cart', img: 'static/img/3.png', detail: '**涵盖合同**：教育培训合同、健身/美容/预付卡服务合同、旅游合同、婚庆服务合同、家政服务合同、维修服务合同等。\n **审查重点**：退费条款、格式条款、虚假宣传、预付款安全、服务标准、霸王条款等。' },
+            { id: '金融借贷类', icon: 'banknote',      img: 'static/img/4.png', detail: '**涵盖合同**：借款合同（个人/银行）、网络借贷合同、信用卡协议、担保 contract, 抵押 contract, 融资租赁 contract 等。\n **审查重点**：利率上限、复利计算、、提前还款违约金、、征信条款等。' },
+            { id: '网络数字类', icon: 'globe',         img: 'static/img/5.png', detail: '**涵盖合同**：用户注册协议/隐私政策、、电商交易 contract, 网络直播/游戏服务协议、、云服务 contract, 数据授权协议等。\n **审查重点**：个人信息收集范围、、免责条款、、账号归属、、虚拟财产、、自动续费等。' },
+            { id: '婚姻家庭类', icon: 'heart',         img: 'static/img/6.png', detail: '**涵盖contract**：婚前/婚内财产协议、、离婚协议、、收养协议、、遗赠扶养协议等。\n **审查重点**：财产归属约定、、债务承担、、子女抚养、、赡养义务、、撤销条件等。' },
+            { id: '经营合作类', icon: 'briefcase',     img: 'static/img/7.png', detail: '**涵盖合同**：合伙协议、股东协议/公司章程，加盟/特许经营合同，经销/代理合同，联营合同，对赌协议等。\n **审查重点**：出资责任，盈亏分配，退出机制，竞业禁止，无限连带责任，对赌条款效力等。' },
+            { id: '其他类',     icon: 'more-horizontal',img: 'static/img/8.png', detail: '**涵盖合同**：无法归入上述7类的合同，如赠与合同、借用合同、仓储合同、运输合同、知识产权许可等。' },
         ];
 
 
@@ -4848,7 +4848,7 @@
                                     </button>
                                 </div>
                                 {/* 核心修改：网格布局改为 4列（大屏）/ 2列（平板）/ 1列（手机） */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 items-start mt-12">
                                     {CATEGORIES.map((cat, idx) => {
                                         const catColors = {
                                             '劳动用工类': { icon: 'text-blue-400', bg: 'bg-blue-600/20', bgSel: 'bg-blue-600/40', border: 'border-blue-500', check: 'text-blue-400' },
@@ -4862,38 +4862,55 @@
                                         };
                                         const cc = catColors[cat.id] || catColors['其他类'];
                                         const isSelected = selectedCategory === cat.id;
+                                        const imgPositionClass = idx < 4 
+                                            ? "-top-8 -left-4 -rotate-12"  // 左上方，稍微旋转增加设计感
+                                            : "-top-8 -right-4 rotate-12"; // 右上方，反向旋转
                                         return (
-                                        <div key={cat.id} className={`glass-card p-6 transition-all hover-lift border-2 card-reveal ${isSelected ? `${cc.border} bg-blue-500/5` : 'border-white/5 hover:border-white/15'}`}
-                                            style={{animationDelay: `${idx * 0.06}s`}}>
-                                            <div className="flex justify-between items-center">
-                                                <div className="flex items-center gap-4 flex-1 cursor-pointer"
-                                                    onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
-                                                    <div className={`p-3 rounded-2xl transition-all ${isSelected ? cc.bgSel : cc.bg} ${cc.icon}`}>
-                                                        <i data-lucide={cat.icon} className="w-6 h-6"></i>
-                                                    </div>
-                                                    <div>
-                                                        <span className="text-xl font-bold text-white">{getCatName(cat.id)}</span>
-                                                        {isSelected && <div className={`text-[10px] ${cc.check} font-black mt-0.5`}>✓ 已选择</div>}
-                                                    </div>
+                                            <div key={cat.id} 
+                                                className={`glass-card p-6 transition-all hover-lift border-2 card-reveal relative ${isSelected ? `${cc.border} bg-blue-500/5` : 'border-white/5 hover:border-white/15'}`}
+                                                style={{animationDelay: `${idx * 0.06}s`}}>
+                                                
+                                                {/* 插入的照片 */}
+                                                <div className={`absolute ${imgPositionClass} w-20 h-20 z-20 pointer-events-none`}>
+                                                    <img 
+                                                        src={cat.img} 
+                                                        alt="" 
+                                                        className="w-full h-full object-cover rounded-xl shadow-2xl border-2 border-white/20"
+                                                        onError={(e) => e.target.style.display='none'} // 如果图片加载失败则隐藏
+                                                    />
                                                 </div>
-                                                <button
-                                                    onClick={e => { e.stopPropagation(); setExpandedCat(prev => prev.includes(cat.id) ? prev.filter(id => id !== cat.id) : [...prev, cat.id]); setTimeout(() => lucide.createIcons(), 100); }}
-                                                    className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-500"
-                                                >
-                                                    <i data-lucide={expandedCat.includes(cat.id) ? 'chevron-up' : 'chevron-down'} className="w-5 h-5"></i>
-                                                </button>
+
+                                                <div className="flex justify-between items-center relative z-10">
+                                                    <div className="flex items-center gap-4 flex-1 cursor-pointer"
+                                                        onClick={() => { setSelectedCategory(cat.id); setStep('upload'); }}>
+                                                        <div className={`p-3 rounded-2xl transition-all ${cc.bg} ${cc.icon}`}>
+                                                            <i data-lucide={cat.icon} className="w-6 h-6"></i>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-xl font-bold text-white">{getCatName(cat.id)}</span>
+                                                            {isSelected && <div className="text-[10px] text-blue-400 font-black mt-0.5">✓ 已选择</div>}
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={e => { e.stopPropagation(); setExpandedCat(prev => prev.includes(cat.id) ? prev.filter(id => id !== cat.id) : [...prev, cat.id]); setTimeout(() => lucide.createIcons(), 100); }}
+                                                        className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-500"
+                                                    >
+                                                        <i data-lucide={expandedCat.includes(cat.id) ? 'chevron-up' : 'chevron-down'} className="w-5 h-5"></i>
+                                                    </button>
+                                                </div>
+                                                
+                                                {expandedCat.includes(cat.id) && (
+                                                    <div className="mt-4 pt-4 border-t border-white/5 text-sm text-slate-400 leading-relaxed negotiation-markdown relative z-10"
+                                                        dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(cat.detail) }}>
+                                                    </div>
+                                                )}
                                             </div>
-                                            {expandedCat.includes(cat.id) && (
-                                                <div className="mt-4 pt-4 border-t border-white/5 text-sm text-slate-400 leading-relaxed negotiation-markdown"
-                                                    dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(cat.detail) }}>
-                                                </div>
-                                            )}
-                                        </div>
                                         );
                                     })}
                                 </div>
                             </div>
                         )}
+
 
                         {/* ══════════════════════════════════════════════════ */}
                         {/* 步骤 2: 上传 / 粘贴                                */}
