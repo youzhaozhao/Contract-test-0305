@@ -1742,27 +1742,46 @@
         .bg-slate-800   { background-color: #f1f5f9 !important; }
         .bg-slate-950   { background-color: #eef2f7 !important; }
 
+        /* 🐾 萌宠模式基础布局设置 */
+        body.pet-mode-active::before,
+        body.pet-mode-active::after,
+        body.pet-mode-active .bg-orbs {
+            display: none !important; /* 隐藏原有的动态背景 */
+        }
 
-        /* ════════════════════════════════════════════════════════
-           🐾 萌宠模式专属背景
-           ════════════════════════════════════════════════════════ */
-        body.pet-mode {
-            /* 替换为你实际存放背景图的路径 */
-            background-image: url('/static/img/background-1.png') !important;
+        body.pet-mode-active {
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
+            transition: background-image 0.5s ease-in-out; /* 背景切换平滑过渡 */
         }
-        /* 开启萌宠模式时，隐藏原有的噪点和网格叠加层 */
-        body.pet-mode::before,
-        body.pet-mode::after {
-            display: none !important;
+
+        /* 三张背景图对应的类 */
+        body.pet-bg-1 { background-image: url('/static/img/background-1.png') !important; }
+        body.pet-bg-2 { background-image: url('/static/img/background-2.png') !important; }
+        body.pet-bg-3 { background-image: url('/static/img/background-3.png') !important; }
+
+        /* 背景选择器小按钮样式 */
+        .bg-selector-pill {
+            display: flex;
+            gap: 6px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            backdrop-filter: blur(10px);
         }
-        /* 开启萌宠模式时，隐藏原有的动态发光球 */
-        body.pet-mode .bg-orbs {
-            display: none !important;
+        .bg-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
         }
+        .bg-dot:hover { transform: scale(1.2); }
+        .bg-dot.active { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.8); }
     </style>
 </head>
 
@@ -3934,7 +3953,7 @@
             const [copyTipType, setCopyTipType]     = useState('');
             const [selectedLanguage, setSelectedLanguage] = useState('zh-CN');
             const [ocrStatus, setOcrStatus]         = useState('');
-            const [isPetMode, setIsPetMode] = useState(false);
+            const [petBgIndex, setPetBgIndex] = useState(1);
 
             // ── 新增状态 ──
             const [apiHealth, setApiHealth]         = useState('checking');  // 'ok' | 'error' | 'checking'
@@ -4052,14 +4071,16 @@
                 try { localStorage.setItem('cc-theme', isDarkMode ? 'dark' : 'light'); } catch {}
             }, [isDarkMode]);
 
-            // ── 萌宠模式背景同步 ──
-            useEffect(() => {
-                if (isPetMode) {
-                    document.body.classList.add('pet-mode');
-                } else {
-                    document.body.classList.remove('pet-mode');
-                }
-            }, [isPetMode]);
+        // ── 萌宠模式背景同步 ──
+         useEffect(() => {
+             // 先移除所有相关类
+             document.body.classList.remove('pet-mode-active', 'pet-bg-1', 'pet-bg-2', 'pet-bg-3');
+             
+             if (isPetMode) {
+                 document.body.classList.add('pet-mode-active');
+                 document.body.classList.add(`pet-bg-${petBgIndex}`);
+             }
+         }, [isPetMode, petBgIndex]);
 
             // ── 启动时验证 JWT，从后端加载用户（ref 防止重复执行）──
             useEffect(() => {
@@ -4810,27 +4831,45 @@
                                         <option key={l.code} value={l.code}>{l.label}</option>
                                     ))}
                                 </select>
-                                {/* ── 主题切换按钮 ── */}
-                                <button
-                                    type="button"
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${isPetMode ? 'bg-pink-500/20 border-pink-500/50 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.2)]' : 'bg-slate-500/10 border-slate-500/20 text-slate-500'}`}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setIsPetMode(!isPetMode);
-                                    }}
-                                    title="切换萌宠模式"
-                                >
-                                    {/* 动态判断显示图标还是图片 */}
-                                    {isPetMode ? (
-                                        <i data-lucide="cat" className="w-4 h-4"></i>
-                                    ) : (
-                                        <i data-lucide="dog" className="w-4 h-4"></i>
+                                {/* ── 萌宠模式控制组 ── */}
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all cursor-pointer relative z-50 pointer-events-auto ${isPetMode ? 'bg-pink-500/20 border-pink-500/50 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.2)]' : 'bg-slate-500/10 border-slate-500/20 text-slate-500'}`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setIsPetMode(!isPetMode);
+                                        }}
+                                        title="切换萌宠模式"
+                                    >
+                                        {isPetMode ? (
+                                            <i data-lucide="cat" className="w-4 h-4"></i>
+                                        ) : (
+                                            <i data-lucide="dog" className="w-4 h-4"></i>
+                                        )}
+                                        <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">
+                                            {isPetMode ? '萌宠模式: ON' : '萌宠模式: OFF'}
+                                        </span>
+                                    </button>
+
+                                    {/* ★ 只有开启萌宠模式时才显示背景选择器 */}
+                                    {isPetMode && (
+                                        <div className="bg-selector-pill animate-fade relative z-50">
+                                            {[1, 2, 3].map(idx => (
+                                                <div
+                                                    key={idx}
+                                                    className={`bg-dot ${petBgIndex === idx ? 'active' : ''}`}
+                                                    style={{ 
+                                                        background: idx === 1 ? '#FFB7B7' : idx === 2 ? '#B7D9FF' : '#B7FFC1' 
+                                                    }}
+                                                    onClick={() => setPetBgIndex(idx)}
+                                                    title={`背景 ${idx}`}
+                                                />
+                                            ))}
+                                        </div>
                                     )}
-                                    <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">
-                                        {isPetMode ? '萌宠模式: ON' : '萌宠模式: OFF'}
-                                    </span>
-                                </button>
+                                </div>
                                 <button
                                     className="theme-toggle-btn"
                                     onClick={() => setIsDarkMode(d => !d)}
