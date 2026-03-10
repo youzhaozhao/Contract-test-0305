@@ -1461,7 +1461,7 @@ def _run_debate_stage(
     debate_results: dict[int, dict] = {}
     failed_indices: list[int] = []
 
-    with ThreadPoolExecutor(max_workers=min(len(debate_indices), 1)) as ex:
+    with ThreadPoolExecutor(max_workers=min(len(debate_indices), 3)) as ex:
         futures = {
             ex.submit(
                 _debate_single_issue,
