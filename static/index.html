@@ -5535,10 +5535,8 @@
                                         { id: '您的权益',  label: '您的权益',  icon: 'shield-check',  badge: <span className="ml-1 px-1.5 py-0.5 text-[9px] font-black rounded-full text-white" style={{background:'linear-gradient(135deg,#10b981,#06b6d4)'}}>权益</span> },
                                         { id: '权益缺失',  label: '权益缺失',  icon: 'alert-triangle', badge: <span className="ml-1 px-1.5 py-0.5 text-[9px] font-black rounded-full text-white" style={{background:'linear-gradient(135deg,#f59e0b,#ef4444)'}}>法规</span> },
                                         { id: '风险细节',  label: t('tab_risks'),       icon: 'shield-alert' },
-                                        { id: '谈判建议',  label: t('tab_negotiation'), icon: 'trending-up'  },
-                                        { id: '修订合同',  label: t('tab_revised'),     icon: 'file-check-2' },
+                                        ...(partyRole === 'partyA' ? [{ id: '修订合同', label: t('tab_revised'), icon: 'file-check-2' }] : []),
                                         ...(analysisResult.caseAnalysis ? [{ id: '案例分析', label: t('tab_cases') || '案例分析', icon: 'landmark' }] : []),
-                                        { id: '律师审查',  label: t('tab_lawyer') || '律师审查', icon: 'user-check' },
                                         ...(analysisResult._debate_enabled ? [{ id: '辩论记录', label: t('tab_debate') || '辩论记录', icon: 'scale' }] : []),
                                     ] : [
                                         { id: '合同总览', label: t('tab_overview'),    icon: 'file-text'    },
