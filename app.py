@@ -1750,7 +1750,52 @@ def run_deep_analysis(task_id, contract_text, category, language='zh-CN', audit_
         # 分离案例文档供后续专项分析
         case_docs = [d for d in docs if d.metadata.get('document_type') == '典型案例']
 
-        prompt_1 = f"""{lang_instruction}
+        if category == '网络数字类':
+            prompt_1 = f"""{lang_instruction}
+
+你是一位专注于互联网法律合规的资深法律专家，深度熟悉《个人信息保护法》《网络安全法》《数据安全法》《消费者权益保护法》《App违法违规收集使用个人信息行为认定方法》等核心法规。
+你正在为用户（本协议的【{party_label}】/普通用户）对一份网络平台用户协议/服务条款/隐私政策进行专项风险审查。
+
+任务：深度审查【待审协议】，站在【用户（{party_label}）】的立场，识别协议中损害用户权益、超范围授权或违反法律规定的风险条款。
+重点识别方向：①过宽或隐晦的数据收集与使用条款 ②不透明的第三方信息共享 ③单方面免责或转移责任的条款 ④单方面变更协议或终止服务条款 ⑤对用户知情权、删除权、撤回同意权的限制 ⑥内容版权过度转让条款 ⑦不公平的争议解决条款
+
+【参考法律依据】：
+{laws_context}
+
+【待审协议内容】：
+{contract_text}
+
+【要求】：
+1. 从普通用户视角识别风险，plainLanguage 必须用通俗易懂的语言（不用法律术语）解释。
+2. 每个风险点必须提供具体法律依据（法律名称+条文编号+条文核心内容）。
+3. 给出 riskScore (0-100)，反映该协议对用户权益的整体威胁程度。
+4. 数量：识别最核心的 5-8 个风险点。
+5. clauseText 必须是协议原文的完整、逐字摘录。
+6. whatToDo 应给出普通用户实际可操作的建议（如：可要求删除数据、可撤回授权等）。
+
+请输出 JSON（所有字符串值使用 {lang_name}）：
+{{
+  "contractType": "协议类型（如：APP用户服务协议+隐私政策）",
+  "jurisdiction": "适用地区",
+  "overallRisk": "极高/高/中/低",
+  "riskScore": 整数,
+  "summary": "一句通俗的总体点评（从普通用户角度说明这份协议的整体风险）",
+  "issues": [
+    {{
+      "id": 1,
+      "severity": "极高/高/中/低",
+      "title": "风险标题（通俗表达，如：平台可随意分享你的个人信息给第三方）",
+      "clauseText": "逐字摘录协议原文（相关条款）",
+      "lawReference": "具体法律名称+条文编号+条文核心内容",
+      "plainLanguage": ["通俗解释：用普通用户能理解的语言说明这条款的实际含义和危害"],
+      "problem": "专业风险分析：该条款违反了什么规定，对用户有什么具体危害",
+      "whatToDo": ["可操作建议：用户遇到此情况可以怎么做（具体、可执行）"],
+      "alternative": "建议的合规修改方向（保护用户权益的改进措辞）"
+    }}
+  ]
+}}"""
+        else:
+            prompt_1 = f"""{lang_instruction}
 
 你是一位拥有顶级事务所背景的资深法律合伙人，擅长从细节中洞察法律风险。
 你正在为合同的【{party_label}】（{party_desc}）提供专属法律审查服务。
@@ -1953,6 +1998,107 @@ def run_deep_analysis(task_id, contract_text, category, language='zh-CN', audit_
         res_3 = _retry_llm(lambda: llm_large.invoke(prompt_3))
         data_3 = json.loads(robust_json_cleaner(res_3.content), strict=False)
 
+        # ────────── Stage 3.5: 用户协议权益专项分析（仅限网络数字类）──────────
+        data_tos_analysis = {}
+        if category == '网络数字类':
+            tasks[task_id]["progress"] = "正在分析用户协议权益授权、用户权益与缺失权益..."
+            tasks[task_id]["stage"] = 3
+            print(f"任务 {task_id}: 执行 Stage 3.5（网络数字类用户协议专项分析）...")
+
+            prompt_tos = f"""{lang_instruction}
+
+你是一位专注于互联网法律合规和用户权益保护的资深法律专家，深度熟悉以下核心法规：
+《个人信息保护法》（PIPL）、《网络安全法》、《数据安全法》、《消费者权益保护法》、
+《电信和互联网用户个人信息保护规定》、《互联网信息服务管理办法》、
+《App违法违规收集使用个人信息行为认定方法》、《移动互联网应用程序个人信息保护管理暂行规定》等。
+
+你正在审查的是一份【网络平台用户协议/服务条款/隐私政策】。请对该协议进行三个维度的全面权益分析。
+
+【参考法律依据】：
+{laws_context}
+
+【待审用户协议原文】：
+{contract_text}
+
+═══════════════════════════════════════════════════════
+【分析维度一：权益授权分析】
+用户在签署本协议时，同意授权给平台哪些权益和数据？
+
+注意：
+- 穿透分析隐晦措辞（如"改善用户体验"可能隐含行为追踪）
+- 区分"必要授权"（服务正常运行所需）与"扩展授权"（超出服务核心范围）
+- 重点关注：个人数据收集、设备权限、第三方共享、商业使用、内容权利转让等
+═══════════════════════════════════════════════════════
+【分析维度二：用户权益分析】
+用户在法律保护下享有哪些权益？平台对应的法定义务是什么？
+
+注意：
+- 结合《个人信息保护法》第44-47条、《消费者权益保护法》等核心权利条款
+- 明确标注协议是否已保障该权益（isGuaranteed: 协议中有明确承诺则为true）
+- 每项权益提供2-3个通俗易懂的生活场景举例
+═══════════════════════════════════════════════════════
+【分析维度三：权益缺失分析】
+对照法律法规要求，本协议在用户权益保护方面存在哪些缺失或不足？
+
+注意：
+- 必须引用具体法律名称、条文编号和条文内容（不得泛泛而谈）
+- 区分严重缺失（违法风险）与一般不足（不规范但未必违法）
+- 用通俗语言解释缺失对普通用户的实际影响
+═══════════════════════════════════════════════════════
+
+请输出 JSON（使用 {lang_name}）：
+{{
+  "authorizedRights": [
+    {{
+      "category": "授权类型（从以下选择：个人信息类/行为数据类/设备权限类/内容权利类/商业使用类/第三方共享类/其他）",
+      "item": "授权项目名称（简洁，10字以内）",
+      "detail": "协议中的具体授权内容描述",
+      "plainExplanation": "通俗解释：用普通人能理解的语言说明这究竟意味着什么，实际影响是什么",
+      "isNecessary": true/false（是否为服务正常运行所必须的授权）,
+      "riskLevel": "高/中/低",
+      "clauseHint": "涉及的条款关键词或位置提示（10字以内）"
+    }}
+  ],
+  "userRights": [
+    {{
+      "rightName": "权益名称（简洁）",
+      "description": "该权益的完整说明",
+      "plainExplanation": "通俗解释：用一两句话让普通用户明白这个权益是什么",
+      "platformObligation": "平台对应的法定义务",
+      "isGuaranteed": true/false（本协议是否明确承诺保障此权益）,
+      "guaranteeDetail": "若已保障，协议中的相关承诺（未保障则填'协议未明确'）",
+      "scenarios": [
+        {{
+          "scene": "具体生活场景描述（让普通用户有代入感）",
+          "yourRight": "在这个场景中，您有权做什么",
+          "platformShouldDo": "平台在这个场景中应当怎么做"
+        }}
+      ]
+    }}
+  ],
+  "missingRights": [
+    {{
+      "missingItem": "缺失的权益保护项目",
+      "severity": "严重/中等/轻微",
+      "legalBasis": "具体法律依据（必须包含：法律名称 + 具体条文编号 + 条文核心内容）",
+      "currentStatus": "当前协议状态（缺失/表述模糊/不完整/存在矛盾）",
+      "plainImpact": "通俗影响说明：用普通用户能理解的语言，说明这个缺失对用户有什么实际危害",
+      "suggestion": "建议的改进方向（具体可操作）"
+    }}
+  ]
+}}"""
+
+            try:
+                res_tos = _retry_llm(lambda: llm.invoke(prompt_tos))
+                data_tos_analysis = json.loads(robust_json_cleaner(res_tos.content), strict=False)
+                print(f"任务 {task_id}: Stage 3.5 用户协议权益专项分析完成 "
+                      f"（授权项 {len(data_tos_analysis.get('authorizedRights', []))} 条，"
+                      f"用户权益 {len(data_tos_analysis.get('userRights', []))} 条，"
+                      f"缺失权益 {len(data_tos_analysis.get('missingRights', []))} 条）")
+            except Exception as e:
+                print(f"  ⚠ Stage 3.5 用户协议分析失败（不影响主流程）: {e}")
+                data_tos_analysis = {}
+
         # ────────── Stage 4: 典型案例类比分析（★增强B）──────────
         data_case_analysis = {}
         if case_docs:
@@ -2016,6 +2162,10 @@ def run_deep_analysis(task_id, contract_text, category, language='zh-CN', audit_
         final_result['revisedContract']  = data_3.get('revisedContract', '')
         final_result['revisionNotes']    = data_3.get('revisionNotes', [])
         final_result['revisionSummary']  = data_3.get('revisionSummary', '')
+
+        # ★ 网络数字类专项：用户协议权益分析
+        if data_tos_analysis:
+            final_result['tosAnalysis'] = data_tos_analysis
 
         # ★ 增强B：案例分析 + 知识库元数据
         if data_case_analysis:
@@ -3044,7 +3194,29 @@ def _do_quick_scan_sync(contract_text: str, category: str, language: str, party_
         for d in docs[:3]
     ])
 
-    prompt = f"""你是法律专家。以本合同【{party_label}】的视角，快速扫描以下合同，
+    if category == '网络数字类':
+        prompt = f"""你是互联网法律合规专家。快速扫描以下用户协议/隐私政策，
+识别对用户（{party_label}）最重要的 3-5 个风险点或权益授权问题。
+【合同分类】：{category}（网络平台用户协议/隐私政策）
+【参考法条摘要】：{laws_brief or '（无检索结果）'}
+【协议内容（前4000字）】：{contract_text[:4000]}
+
+重点关注：①过宽的数据收集授权 ②模糊的第三方共享 ③不合理的免责条款 ④缺失的用户权益保障 ⑤单方面变更协议条款
+
+输出 JSON（使用 {lang_name}）：
+{{
+  "quickRiskLevel": "极高/高/中/低",
+  "quickScore": 整数0-100,
+  "contractType": "推断的合同类型（如：APP用户协议、隐私政策等）",
+  "topThreats": [
+    {{"title": "风险标题", "severity": "极高/高/中/低",
+      "brief": "一句话说明危害", "clauseHint": "涉及条款简述（10字内）"}}
+  ],
+  "quickTip": "最重要一条建议（20字内）",
+  "lawyerReviewSuggested": true
+}}"""
+    else:
+        prompt = f"""你是法律专家。以本合同【{party_label}】的视角，快速扫描以下合同，
 识别对【{party_label}】最危险的 3-5 个风险点（优先选高危/极高危）。
 【合同分类】：{category}
 【审查视角】：{party_label}（对方为{party_opposite}）
